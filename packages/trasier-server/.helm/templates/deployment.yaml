@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+      matchLabels:
+          app: {{ template "name" . }}
+          release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      initContainers:
+        - name: init-elasticsearch
+          image: busybox:1.28
+          command: ['sh', '-c', 'until nc -vz {{ .Release.Name }}-elasticsearch-master 9200; do echo "Waiting for {{ .Release.Name }}-elasticsearch-master service"; sleep 2; done;']
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          {{- if .Values.env }}
+          env:
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+          volumeMounts:
+          - name: config
+            mountPath: /application.yaml
+            subPath: application.yaml
+      volumes:
+      - name: config
+        configMap:
+          name: {{ template "fullname" . }}
+          items:
+            - key: application.yaml
+              path: application.yaml
+

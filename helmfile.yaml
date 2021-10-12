@@ -1,0 +1,7 @@
+bases:
+  - "helmfile/bases/helmDefaults.yaml"
+  - "helmfile/bases/environments.yaml"
+
+helmfiles:
+  - "helmfile/releases/00-trasier/helmfile.yaml"
+missingFileHandler: Error
