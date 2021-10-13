@@ -1,0 +1,20 @@
+---
+bases:
+  - "../../bases/helmDefaults.yaml"
+  - "../../bases/environments.yaml"
+
+---
+repositories:
+  - name: almorgv
+    url: https://almorgv.github.io/helm-charts/charts
+
+releases:
+  - name: pact
+    namespace: sixsense-dev
+    chart: almorgv/pact-broker
+    version: 0.1.0
+    labels:
+      tier: app
+      domain: pact
+    values:
+      - pact.values.yaml.gotmpl
