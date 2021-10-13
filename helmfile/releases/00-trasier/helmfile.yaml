@@ -18,3 +18,13 @@ releases:
       domain: trasier
     values:
       - trasier.values.yaml.gotmpl
+
+  - name: keycloak
+    namespace: sixsense-dev
+    chart: bitnami/keycloak
+    version: 5.1.2
+    labels:
+      tier: app
+      domain: trasier
+    values:
+      - keycloak.values.yaml.gotmpl

@@ -1,0 +1,24 @@
+elasticsearch:
+  sysctlImage:
+    enabled: false
+  master:
+    securityContext:
+      enabled: false
+    #TODO: deactivate
+    livenessProbe:
+      enabled: false
+  coordinating:
+    securityContext:
+      enabled: false
+    #TODO: deactivate
+    livenessProbe:
+      enabled: false
+  data:
+    securityContext:
+      enabled: false
+    #TODO: deactivate
+    livenessProbe:
+      enabled: false
+  ingest:
+    securityContext:
+      enabled: false

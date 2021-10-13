@@ -46,8 +46,4 @@ site
 
 target
 
-camel-kafka-connector-catalog
-*.tgz
-
-.secrets
-/packages/spark-job-jira/dependency-reduced-pom.xml
+.lock

@@ -1,0 +1,18 @@
+image:
+  repository: tomassatka/trasier-example-offer
+  pullPolicy: Always
+  tag: 0.0.1
+
+replicaCount: 1
+resources: {}
+#env:
+#  JAVA_OPTS: -Dmicronaut.config.files=/application.yaml
+
+service:
+  name: trasier-example-offer
+  type: ClusterIP
+  externalPort: 7000
+  internalPort: 7000
+
+ingress:
+  enabled: false

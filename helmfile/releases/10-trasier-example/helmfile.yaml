@@ -1,0 +1,26 @@
+---
+bases:
+  - "../../bases/helmDefaults.yaml"
+  - "../../bases/environments.yaml"
+
+---
+releases:
+  - name: trasier-example-payment
+    namespace: sixsense-dev
+    chart: ../../../packages/trasier-example-payment/.helm
+    version: 0.0.1
+    labels:
+      tier: app
+      domain: trasier-example
+    values:
+      - trasier-example-payment.values.yaml.gotmpl
+
+  - name: trasier-example-offer
+    namespace: sixsense-dev
+    chart: ../../../packages/trasier-example-offer/.helm
+    version: 0.0.1
+    labels:
+      tier: app
+      domain: trasier-example
+    values:
+      - trasier-example-offer.values.yaml.gotmpl

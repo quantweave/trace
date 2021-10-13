@@ -1,0 +1,19 @@
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: {{ template "fullname" . }}
+#data:
+#  application.yaml: |
+#    micronaut:
+#      application:
+#        name: trasier-server
+#
+#    trasier.elastic:
+#      namespace: {{ .Release.Namespace }}
+#      hosts:
+#        - {{ .Release.Name }}-elasticsearch-master
+#      port: 9200
+#      scheme: http
+#      index: default
+#      type: event
+#

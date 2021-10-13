@@ -4,4 +4,5 @@ bases:
 
 helmfiles:
   - "helmfile/releases/00-trasier/helmfile.yaml"
+  - "helmfile/releases/10-trasier-example/helmfile.yaml"
 missingFileHandler: Error

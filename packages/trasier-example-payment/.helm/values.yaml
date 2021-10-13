@@ -1,0 +1,21 @@
+image:
+  repository: tomassatka/trasier-example-payment
+  pullPolicy: Always
+  tag: 0.0.1
+
+replicaCount: 1
+resources: {}
+env:
+  JAVA_OPTS: "-Dspring.config.location=/application.yaml"
+
+service:
+  name: trasier-example-payment
+  type: ClusterIP
+  externalPort: 7001
+  internalPort: 7001
+
+ingress:
+  enabled: false
+
+offer:
+  endpoint: http://localhost:7000
