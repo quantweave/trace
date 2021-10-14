@@ -1,0 +1,388 @@
+# there are 2 modes in which query services can run `merged` and `individually`
+# merge-query-services.enabled = true and merge-query-services.disabled = false
+# will run hypertrace-data-config and hypertrace-data-query service (merged)
+# instead of entity, config, attribute, query & gateway service
+# to go back to running services `individually` toggle the values 
+# Property                       `merged`                        `individually`
+# entityServiceHost     hypertrace-data-config-service            entity-service
+# entityServicePort           9012                                   50061
+# attributeServiceHost  hypertrace-data-config-service            attribute-service
+# attributeServicePort        9012                                   9012
+# configServiceHost     hypertrace-data-config-service            config-service
+# configServicePort           9012                                   50101
+# gatewayServiceHost    hypertrace-data-query-service             gateway-service
+# gatewayServicePort          9001                                   50071
+merge-query-services: 
+  enabled: true
+  disabled: false
+
+# config for `merged` 
+entityServiceHost: &entityServiceHost hypertrace-data-config-service
+entityServicePort: &entityServicePort 9012 
+attributeServiceHost: &attributeServiceHost hypertrace-data-config-service
+attributeServicePort: &attributeServicePort 9012
+configServiceHost: &configServiceHost hypertrace-data-config-service
+configServicePort: &configServicePort 9012
+gatewayServiceHost: &gatewayServiceHost hypertrace-data-query-service
+gatewayServicePort: &gatewayServicePort 9001
+queryServiceHost: &queryServiceHost hypertrace-data-query-service
+queryServicePort: &queryServicePort 9001
+
+hypertrace-collector:
+  service:
+    type: LoadBalancer
+
+  configMap:
+    data:
+      extensions:
+        health_check: {}
+      receivers:
+        otlp:
+          protocols:
+            grpc: 
+              endpoint: "0.0.0.0:4317"
+            http: 
+              endpoint: "0.0.0.0:55681"
+        opencensus: 
+          endpoint: "0.0.0.0:55678"
+        zipkin: 
+          endpoint: "0.0.0.0:9411"
+        jaeger:
+          protocols:
+            grpc: 
+              endpoint: "0.0.0.0:14250"
+            thrift_http: 
+              endpoint: "0.0.0.0:14268"
+      processors:
+        batch: {}
+
+span-normalizer:
+  resources:
+    requests:
+      cpu: "0.5"
+      memory: "512Mi"
+    limits:
+      cpu: "1"
+      memory: "512Mi"
+  spanNormalizerConfig:
+    processor:
+      defaultTenantId: __default
+    flink:
+      job:
+        metrics:
+          reporters: "slf4j"
+    metrics:
+      reporter:
+        names: ["console"]
+  kafka-topic-creator:
+    enabled: true
+    kafka:
+      topics:
+        raw-spans-from-jaeger-spans:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+        raw-logs:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 8589934592 # default = -1
+            retention.ms: 43200000 # default = 604800000 (7 days)
+            max.message.bytes: 1048588 # default = 1048588       
+
+raw-spans-grouper:
+  resources:
+    requests:
+      cpu: "0.5"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+  volumeClaimTemplates:
+    name: hypertrace
+    storageClassName: hypertrace
+    storageRequestSize: 1Gi
+  kafka-topic-creator:
+    kafka:
+      topics:
+        structured-traces-from-raw-spans:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+
+hypertrace-trace-enricher:
+  traceEnricherConfig:
+    entityServiceHost: *entityServiceHost 
+    entityServicePort: *entityServicePort
+    attributeServiceHost: *attributeServiceHost
+    attributeServicePort: *attributeServicePort
+    configServiceHost: *configServiceHost
+    configServicePort: *configServicePort 
+  javaOpts: "-Xms512M -Xmx768M"
+  resources:
+    requests:
+      cpu: "0.5"
+      memory: "1Gi"
+    limits:
+      cpu: "1"
+      memory: "1Gi"
+
+  kafka-topic-creator:
+    enabled: true
+    kafka:
+      topics:
+        enriched-structured-traces:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+
+hypertrace-view-generator:
+  viewCreatorJobConfig:
+    data:
+      application.conf: |-
+        pinot.retentionTimeValue = 5
+        pinot.retentionTimeUnit = DAYS
+              
+  kafka-topic-creator:
+    enabled: true
+    kafka:
+      topics:
+        backend-entity-view-events:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+        raw-trace-view-events:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+        raw-service-view-events:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+        service-call-view-events:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+        span-event-view:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+        log-event-view:
+          replicationFactor: 3
+          partitions: 8
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 21600000
+
+gateway-service:
+  resources:
+    requests:
+      cpu: "0.25"
+      memory: "512Mi"
+    limits:
+      cpu: "0.5"
+      memory: "512Mi"
+
+entity-service:
+  resources:
+    requests:
+      cpu: "0.25"
+      memory: "512Mi"
+    limits:
+      cpu: "0.5"
+      memory: "512Mi"
+
+attribute-service:
+  resources:
+    requests:
+      cpu: "0.25"
+      memory: "128Mi"
+    limits:
+      cpu: "0.5"
+      memory: "256Mi"
+
+query-service:
+  resources:
+    requests:
+      cpu: "0.25"
+      memory: "512Mi"
+    limits:
+      cpu: "0.5"
+      memory: "512Mi"
+  queryServiceConfig:
+    data:
+      zookeeperConnectionString: zookeeper:2181/pinot/hypertrace-views
+
+config-service:
+  resources:
+    requests:
+      cpu: "0.1"
+      memory: "128Mi"
+    limits:
+      cpu: "0.25"
+      memory: "256Mi"
+      
+hypertrace-data-query-service:
+  queryServiceConfig:
+    data:
+      attributeClient:
+        host: hypertrace-data-config-service
+        port: 9012
+  gatewayServiceConfig:
+    data:
+      application.conf: |-
+        query.service.config = {
+          host = localhost
+          port = 9001
+        }
+        entity.service.config = {
+          host = hypertrace-data-config-service
+          port = 9012
+        }
+        attributes.service.config = {
+          host = hypertrace-data-config-service
+          port = 9012
+        }
+  resources:
+    requests:
+      cpu: "0.25"
+      memory: "512Mi"
+    limits:
+      cpu: "0.5"
+      memory: "512Mi"
+
+hypertrace-data-config-service:
+  resources:
+    requests:
+      cpu: "0.25"
+      memory: "512Mi"
+    limits:
+      cpu: "0.5"
+      memory: "512Mi"       
+
+hypertrace-graphql-service:
+  javaOpts: "-Xms128M -Xmx256M"
+  serviceConfig:
+    defaultTenantId: "__default"
+    gatewayService:
+      host: *gatewayServiceHost
+      port: *gatewayServicePort
+    attributeService:
+      host: *attributeServiceHost
+      port: *attributeServicePort
+    entityService:
+      host: *entityServiceHost
+      port: *entityServicePort
+    configService:
+      host: *configServiceHost
+      port: *configServicePort
+  resources:
+    requests:
+      cpu: "0.25"
+      memory: "320Mi"
+    limits:
+      cpu: "0.5"
+      memory: "320Mi"
+
+hypertrace-ui:
+  service:
+    type: LoadBalancer
+  nginxConfig:
+    graphqlRedirectEnabled: true
+  resources:
+    requests:
+      cpu: "0.1"
+      memory: "128Mi"
+    limits:
+      cpu: "0.25"
+      memory: "256Mi"
+
+kafka-topic-creator:
+  enabled: false
+
+hypertrace-alert-engine: 
+  hypertraceAlertEngineConfig:
+    queryService:
+      host: *queryServiceHost
+      port: *queryServicePort
+    attributeService:
+      host: *attributeServiceHost
+      port: *attributeServicePort
+  notificationChannelsConfig:
+    channels:
+      [
+        {
+          "channelName": "channel-1",
+          "channelId": "channel-id-1",
+          "channelConfig": [
+            {
+              "channelConfigType": "WEBHOOK",
+              "url": "<override slack url>",
+              "webhookFormat": "WEBHOOK_FORMAT_SLACK"
+            }
+          ]
+        }
+      ] 
+  alertRulesConfig:
+    rules:
+      [
+        {
+          "id": "notification_rule_1",
+          "ruleName": "high_avg_latency",
+          "description": "Alert for high avg latency of payment service",
+          "eventConditionId": "event_condition_1",
+          "eventConditionType": "MetricAnomalyEventCondition",
+          "channelId": "channel-id-1",
+          "eventCondition": {
+            "metricSelection": {
+              "metricAttribute": {
+                "key": "duration",
+                "scope": "SERVICE"
+              },
+              "metricAggregationFunction": "METRIC_AGGREGATION_FUNCTION_TYPE_AVG",
+              "metricAggregationInterval": "PT15S",
+              "filter": {
+                "leafFilter": {
+                  "lhsExpression": {
+                    "attribute": {
+                      "key": "name",
+                      "scope": "SERVICE"
+                    }
+                  },
+                  "valueOperator": "VALUE_OPERATOR_EQ",
+                  "rhsExpression": {
+                    "stringValue": "customer"
+                  }
+                }
+              }
+            },
+            "ruleDuration": "PT5M",
+            "violationCondition": [ {
+              "staticThresholdCondition": {
+                "operator": "STATIC_THRESHOLD_OPERATOR_GT",
+                "value": 5.0,
+                "severity": "SEVERITY_CRITICAL"
+              }
+            } ]
+          }
+        }
+      ]         
+  
+alerting:
+  enabled: false  

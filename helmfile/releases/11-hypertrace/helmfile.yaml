@@ -1,0 +1,32 @@
+---
+bases:
+  - "../../bases/helmDefaults.yaml"
+  - "../../bases/environments.yaml"
+
+---
+repositories:
+  - name: hypertrace
+    url: https://storage.googleapis.com/hypertrace-helm-charts
+
+releases:
+  - name: hypertrace-infra
+    namespace: sixsense-dev
+    chart: ../../../charts/hypertrace/data-services
+    version: 0.1.0
+    labels:
+      tier: infra
+      domain: hypertrace
+    values:
+      - hypertrace-infra.values.yaml.gotmpl
+
+  - name: hypertrace
+    namespace: sixsense-dev
+    chart: ../../../charts/hypertrace/platform-services
+    version: 0.1.0
+    labels:
+      tier: app
+      domain: hypertrace
+    needs:
+      - sixsense-dev/hypertrace-infra
+    values:
+      - hypertrace.values.yaml.gotmpl

@@ -9,6 +9,16 @@ repositories:
     url: https://charts.bitnami.com/bitnami
 
 releases:
+  - name: keycloak
+    namespace: sixsense-dev
+    chart: bitnami/keycloak
+    version: 5.1.2
+    labels:
+      tier: infra
+      domain: trasier
+    values:
+      - keycloak.values.yaml.gotmpl
+
   - name: trasier
     namespace: sixsense-dev
     chart: ../../../packages/trasier-server/.helm
@@ -16,15 +26,7 @@ releases:
     labels:
       tier: app
       domain: trasier
+    needs:
+      - sixsense-dev/keycloak
     values:
       - trasier.values.yaml.gotmpl
-
-  - name: keycloak
-    namespace: sixsense-dev
-    chart: bitnami/keycloak
-    version: 5.1.2
-    labels:
-      tier: app
-      domain: trasier
-    values:
-      - keycloak.values.yaml.gotmpl

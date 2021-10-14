@@ -1,0 +1,145 @@
+htEnv: minikube
+
+mongodb:
+  enabled: false
+  replicaSet:
+    enabled: false
+
+postgresql:
+  enabled: true
+  fullnameOverride: "postgres"
+  persistence:
+    storageClass: "hypertrace"
+    size: "2Gi"
+
+zookeeper:
+  replicaCount: 1
+  javaOpts: "-Xms128M -Xmx128M -XX:MaxDirectMemorySize=64M -XX:+ExitOnOutOfMemoryError"
+  resources:
+    requests:
+      cpu: "0.1"
+      memory: "256Mi"
+    limits:
+      cpu: "0.5"
+      memory: "256Mi"
+  volume:
+    storageClassName: "hypertrace"
+    storage: "1Gi"
+  livenessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 1
+    failureThreshold: 8
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 1
+    failureThreshold: 8
+
+kafka:
+  replicaCount: 1
+  javaOpts: "-Xms128M -Xmx384M -XX:MaxDirectMemorySize=64M -XX:+ExitOnOutOfMemoryError"
+  resources:
+    requests:
+      cpu: "0.2"
+      memory: "512Mi"
+    limits:
+      cpu: "0.5"
+      memory: "512Mi"
+  volume:
+    storageClassName: "hypertrace"
+    storage: "4Gi"
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 1
+    failureThreshold: 10
+  config:
+    defaultReplicationFactor: 1
+    minInsyncReplicas: 1
+    offsetsTopicReplicationFactor: 1
+    transactionStateLogReplicationFactor: 1
+
+schema-registry:
+  replicaCount: 1
+  heapOptions: "-Xms128M -Xmx128M -XX:MaxDirectMemorySize=64M -XX:+ExitOnOutOfMemoryError"
+  resources:
+    requests:
+      cpu: "0.1"
+      memory: "256Mi"
+    limits:
+      cpu: "0.5"
+      memory: "256Mi"
+  customEnv:
+    SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: 1
+  livenessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 9
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 9
+
+pinot:
+  controller:
+    replicaCount: 1
+    jvmOpts: "-Xms128M -Xmx192M -XX:MaxDirectMemorySize=64M -XX:+ExitOnOutOfMemoryError"
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "256Mi"
+    persistence:
+      size: "4Gi"
+      storageClass: "hypertrace"
+    livenessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 1
+      failureThreshold: 8
+    readinessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 1
+      failureThreshold: 8
+
+  broker:
+    replicaCount: 1
+    jvmOpts: "-Xms128M -Xmx192M -XX:MaxDirectMemorySize=64M -XX:+ExitOnOutOfMemoryError"
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "256Mi"
+    livenessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 1
+      failureThreshold: 8
+    readinessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 1
+      failureThreshold: 8
+
+  server:
+    replicaCount: 1
+    jvmOpts: "-Xms128M -Xmx192M -XX:MaxDirectMemorySize=64M -XX:+ExitOnOutOfMemoryError"
+    resources:
+      requests:
+        cpu: "0.2"
+        memory: "256Mi"
+    persistence:
+      size: "4Gi"
+      storageClass: "hypertrace"
+    livenessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 1
+      failureThreshold: 8
+    readinessProbe:
+      initialDelaySeconds: 5
+      periodSeconds: 5
+      timeoutSeconds: 1
+      failureThreshold: 8

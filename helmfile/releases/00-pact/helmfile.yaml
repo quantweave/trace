@@ -14,7 +14,7 @@ releases:
     chart: almorgv/pact-broker
     version: 0.1.0
     labels:
-      tier: app
+      tier: infrastructure
       domain: pact
     values:
       - pact.values.yaml.gotmpl

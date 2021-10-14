@@ -1,0 +1,286 @@
+span-normalizer:
+  javaOpts: "-Xms128M -Xmx128M -XX:MaxDirectMemorySize=96M -XX:+ExitOnOutOfMemoryError"
+  resources:
+    requests:
+      cpu: "0.05"
+      memory: "320Mi"
+    limits:
+      cpu: "0.5"
+      memory: "320Mi"
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  kafka-topic-creator:
+    enabled: false
+
+raw-spans-grouper:
+  replicaCount: 1
+  javaOpts: "-Xms128M -Xmx128M -XX:MaxDirectMemorySize=96M -XX:+ExitOnOutOfMemoryError"
+  resources:
+    requests:
+      cpu: "0.05"
+      memory: "320Mi"
+    limits:
+      cpu: "0.5"
+      memory: "320Mi"
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  rawSpansGrouperConfig:
+    kafkaStreamsConfig:
+      replicationFactor: 1
+    span:
+      groupby:
+        internal: 10
+  kafka-topic-creator:
+    enabled: false
+
+hypertrace-trace-enricher:
+  javaOpts: "-Xms128M -Xmx192M -XX:MaxDirectMemorySize=96M -XX:+ExitOnOutOfMemoryError"
+  resources:
+    requests:
+      cpu: "0.2"
+      memory: "384Mi"
+    limits:
+      cpu: "0.5"
+      memory: "384Mi"
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  readinessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 5
+  kafka-topic-creator:
+    enabled: false
+
+hypertrace-view-generator:
+  creator:
+    allViews:
+      jobName: all-views-creation-job
+      javaOpts: "-XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=75.0"
+      resources:
+        limits:
+          cpu: 1.0
+          memory: 512Mi
+        requests:
+          cpu: 0.1
+          memory: 384Mi
+
+  viewGeneratorGroups:
+    all-views-generator:
+      generator:
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 1
+            memory: 1.5Gi
+          requests:
+            cpu: 0.5
+            memory: 1.5Gi
+
+  kafka-topic-creator:
+    enabled: true
+    kafka:
+      topics:
+        backend-entity-view-events:
+          replicationFactor: 1
+          partitions: 2
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 10800000
+        raw-trace-view-events:
+          replicationFactor: 1
+          partitions: 2
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 10800000
+        raw-service-view-events:
+          replicationFactor: 1
+          partitions: 2
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 10800000
+        service-call-view-events:
+          replicationFactor: 1
+          partitions: 2
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 10800000
+        span-event-view:
+          replicationFactor: 1
+          partitions: 2
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 10800000
+        log-event-view:
+          replicationFactor: 1
+          partitions: 2
+          configs:
+            retention.bytes: 1073741824
+            retention.ms: 10800000
+
+gateway-service:
+  replicaCount: 1
+  containerPortName: grpc-port
+
+entity-service:
+  replicaCount: 1
+  entityServiceConfig:
+    dataStoreType: "postgres"
+  config-bootstrapper:
+    dataStoreType: "postgres"
+    javaOpts: "-Xms128M -Xmx128M"
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "256Mi"
+      limits:
+        cpu: "0.2"
+        memory: "256Mi"
+
+attribute-service:
+  replicaCount: 1
+  configMap:
+    dataStoreType: "postgres"
+  config-bootstrapper:
+    dataStoreType: "postgres"
+    javaOpts: "-Xms128M -Xmx128M"
+    resources:
+      requests:
+        cpu: "0.1"
+        memory: "256Mi"
+      limits:
+        cpu: "0.2"
+        memory: "256Mi"
+
+query-service:
+  replicaCount: 1
+
+hypertrace-graphql-service:
+  replicaCount: 1
+  javaOpts: "-Xms128M -Xmx128M -XX:MaxDirectMemorySize=64M -XX:+ExitOnOutOfMemoryError"
+  resources:
+    requests:
+      cpu: "0.2"
+      memory: "256Mi"
+    limits:
+      cpu: "0.5"
+      memory: "256Mi"
+
+hypertrace-ui:
+  service:
+    port: 2020
+  resources:
+    requests:
+      cpu: "0.05"
+      memory: "64Mi"
+    limits:
+      cpu: "0.2"
+      memory: "64Mi"
+
+kafka-topic-creator:
+  enabled: true
+  resources:
+    requests:
+      cpu: "0.2"
+      memory: "256Mi"
+    limits:
+      cpu: "0.5"
+      memory: "256Mi"
+  env:
+    - name: KAFKA_HEAP_OPTS
+      value: "-Xms128M -Xmx128M"
+  jobName: hypertrace-kafka-topics-creator
+  helmHook: pre-install,pre-upgrade
+  zookeeper:
+    address: zookeeper:2181
+  kafka:
+    topics:
+      jaeger-spans:
+        replicationFactor: 1
+        partitions: 2
+        configs:
+          retention.bytes: 1073741824
+          retention.ms: 10800000
+      raw-spans-from-jaeger-spans:
+        replicationFactor: 1
+        partitions: 2
+        configs:
+          retention.bytes: 1073741824
+          retention.ms: 10800000
+      structured-traces-from-raw-spans:
+        replicationFactor: 1
+        partitions: 2
+        configs:
+          retention.bytes: 1073741824
+          retention.ms: 10800000
+      enriched-structured-traces:
+        replicationFactor: 1
+        partitions: 2
+        configs:
+          retention.bytes: 1073741824
+          retention.ms: 10800000
+      raw-logs:
+        replicationFactor: 1
+        partitions: 2
+        configs:
+          retention.bytes: 1073741824
+          retention.ms: 10800000
+
+config-service:
+  configServiceConfig:
+    dataStoreType: "postgres"
+    postgres:
+      host: postgres
+      port: 5432
+      url: ""
+
+hypertrace-data-config-service:
+  entityServiceConfig:
+    dataStoreType: "postgres"
+  attributeServiceConfig:
+    dataStoreType: "postgres"
+  configServiceConfig:
+    dataStoreType: "postgres"
+    postgres:
+      host: postgres
+      port: 5432
+      url: ""
+  config-bootstrapper:
+    dataStoreType: "postgres"
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  resources:
+    requests:
+      cpu: 0.1
+      memory: 1280Mi
+    limits:
+      cpu: 1
+      memory: 1280Mi
+
+hypertrace-data-query-service:
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+
+  resources:
+    requests:
+      cpu: 0.1
+      memory: 1280Mi
+    limits:
+      cpu: 1
+      memory: 1280Mi
