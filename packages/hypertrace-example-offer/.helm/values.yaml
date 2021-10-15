@@ -1,0 +1,19 @@
+image:
+  repository: tomassatka/hypertrace-example-offer
+  pullPolicy: Always
+  tag: 0.0.1
+
+replicaCount: 1
+resources: {}
+
+service:
+  name: hypertrace-example-offer
+  type: ClusterIP
+  externalPort: 7000
+  internalPort: 7000
+
+ingress:
+  enabled: false
+
+env:
+  HT_CONFIG_FILE: /config.yaml

@@ -15,6 +15,8 @@
         <module>trasier-server</module>
         <module>trasier-example-payment</module>
         <module>trasier-example-offer</module>
+        <module>hypertrace-example-payment</module>
+        <module>hypertrace-example-offer</module>
     </modules>
 
     <properties>

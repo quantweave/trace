@@ -1,0 +1,19 @@
+image:
+  repository: tomassatka/hypertrace-example-payment
+  pullPolicy: Always
+  tag: 0.0.1
+
+replicaCount: 1
+resources: {}
+
+service:
+  name: hypertrace-example-payment
+  type: ClusterIP
+  externalPort: 7001
+  internalPort: 7001
+
+ingress:
+  enabled: false
+
+offer:
+  endpoint: http://localhost:7000

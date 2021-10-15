@@ -7,4 +7,6 @@ helmfiles:
   - "helmfile/releases/10-trasier/helmfile.yaml"
   - "helmfile/releases/11-hypertrace/helmfile.yaml"
   - "helmfile/releases/20-trasier-example/helmfile.yaml"
+  - "helmfile/releases/21-hypertrace-example/helmfile.yaml"
+
 missingFileHandler: Error

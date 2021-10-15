@@ -172,6 +172,12 @@ hypertrace-graphql-service:
     limits:
       cpu: "0.5"
       memory: "256Mi"
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
 
 hypertrace-ui:
   service:

@@ -11,7 +11,7 @@ releases:
     version: 0.0.1
     labels:
       tier: app
-      domain: trasier
+      domain: trasier-example
     values:
       - trasier-example-payment.values.yaml.gotmpl
 
@@ -21,6 +21,6 @@ releases:
     version: 0.0.1
     labels:
       tier: app
-      domain: trasier
+      domain: trasier-example
     values:
       - trasier-example-offer.values.yaml.gotmpl

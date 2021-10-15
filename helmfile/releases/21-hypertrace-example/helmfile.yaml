@@ -1,0 +1,26 @@
+---
+bases:
+  - "../../bases/helmDefaults.yaml"
+  - "../../bases/environments.yaml"
+
+---
+releases:
+  - name: hypertrace-example-payment
+    namespace: sixsense-dev
+    chart: ../../../packages/hypertrace-example-payment/.helm
+    version: 0.0.1
+    labels:
+      tier: app
+      domain: hypertrace-example
+    values:
+      - hypertrace-example-payment.values.yaml.gotmpl
+
+  - name: hypertrace-example-offer
+    namespace: sixsense-dev
+    chart: ../../../packages/hypertrace-example-offer/.helm
+    version: 0.0.1
+    labels:
+      tier: app
+      domain: hypertrace-example
+    values:
+      - hypertrace-example-offer.values.yaml.gotmpl
