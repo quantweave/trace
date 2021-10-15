@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}
+data:
+  script.js: |
+    import http from 'k6/http';
+
+    const OFFER_ENDPOINT = `${__ENV.OFFER_ENDPOINT}`;
+    const PAYMENT_ENDPOINT = `${__ENV.PAYMENT_ENDPOINT}`;
+
+    export default function () {
+
+      var product = Math.random().toString(36).substr(2, 5);
+
+      let offerResponse =         http.get('http://' + OFFER_ENDPOINT + '/offer?product=' + product);
+      let paymentResponse =       http.post('http://' + PAYMENT_ENDPOINT + '/payment/' + offerResponse.json("id"));
+      let paymentCheckResponse =  http.get('http://' + PAYMENT_ENDPOINT + '/payment/' + paymentResponse.json("id"));
+    }

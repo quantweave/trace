@@ -8,5 +8,7 @@ helmfiles:
   - "helmfile/releases/11-hypertrace/helmfile.yaml"
   - "helmfile/releases/20-trasier-example/helmfile.yaml"
   - "helmfile/releases/21-hypertrace-example/helmfile.yaml"
+  - "helmfile/releases/30-trasier-k6/helmfile.yaml"
+  - "helmfile/releases/31-hypertrace-k6/helmfile.yaml"
 
 missingFileHandler: Error

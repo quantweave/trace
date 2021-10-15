@@ -1,0 +1,6 @@
+image:
+  repository: loadimpact/k6
+  pullPolicy: IfNotPresent
+  tag: 0.34.1
+
+resources: {}

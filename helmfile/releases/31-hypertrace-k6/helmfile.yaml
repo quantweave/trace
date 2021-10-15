@@ -1,0 +1,16 @@
+---
+bases:
+  - "../../bases/helmDefaults.yaml"
+  - "../../bases/environments.yaml"
+
+---
+releases:
+  - name: hypertrace-k6
+    namespace: sixsense-dev
+    chart: ../../../charts/k6
+    version: 0.0.1
+    labels:
+      tier: app
+      domain: hypertrace-k6
+    values:
+      - hypertrace-k6.values.yaml.gotmpl
