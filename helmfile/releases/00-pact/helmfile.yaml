@@ -18,3 +18,5 @@ releases:
       domain: pact
     values:
       - pact.values.yaml.gotmpl
+    transformers:
+      - pact.transformer.yaml

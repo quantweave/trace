@@ -1,0 +1,14 @@
+apiVersion: builtin
+kind: PatchTransformer
+metadata:
+  name: pact-broker
+target:
+  kind: Deployment
+  name: pact-pact-broker
+patch: |-
+  - op: replace
+    path: /spec/template/spec/containers/0/ports/0/containerPort
+    value: 9292
+  - op: replace
+    path: /spec/template/spec/containers/0/env/1/value
+    value: "9292"
