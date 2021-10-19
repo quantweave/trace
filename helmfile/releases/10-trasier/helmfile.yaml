@@ -22,7 +22,7 @@ releases:
   - name: kibana
     namespace: sixsense-dev
     chart: bitnami/kibana
-    version: 9.0.6
+    version: 8.1.9
     labels:
       tier: infra
       domain: trasier
