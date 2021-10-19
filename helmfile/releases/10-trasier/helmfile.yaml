@@ -19,6 +19,16 @@ releases:
     values:
       - keycloak.values.yaml.gotmpl
 
+  - name: kibana
+    namespace: sixsense-dev
+    chart: bitnami/kibana
+    version: 9.0.6
+    labels:
+      tier: infra
+      domain: trasier
+    values:
+      - kibana.values.yaml.gotmpl
+
   - name: trasier-server
     namespace: sixsense-dev
     chart: ../../../packages/trasier-server/.helm
