@@ -4,7 +4,7 @@ metadata:
   name: pact-broker
 target:
   kind: Deployment
-  name: pact-pact-broker
+  name: pact-broker
 patch: |-
   - op: replace
     path: /spec/template/spec/containers/0/ports/0/containerPort
