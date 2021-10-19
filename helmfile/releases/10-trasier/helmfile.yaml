@@ -19,7 +19,7 @@ releases:
     values:
       - keycloak.values.yaml.gotmpl
 
-  - name: trasier
+  - name: trasier-server
     namespace: sixsense-dev
     chart: ../../../packages/trasier-server/.helm
     version: 0.0.1

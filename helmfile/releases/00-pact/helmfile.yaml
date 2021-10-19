@@ -9,7 +9,7 @@ repositories:
     url: https://almorgv.github.io/helm-charts/charts
 
 releases:
-  - name: pact
+  - name: pact-broker
     namespace: sixsense-dev
     chart: almorgv/pact-broker
     version: 0.1.0
