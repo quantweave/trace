@@ -184,6 +184,7 @@ hypertrace-graphql-service:
 hypertrace-ui:
   image:
     repository: tomassatka/hypertrace-ui
+    pullPolicy: Always
     tagOverride: "0.70.3"
   service:
     port: 2020
