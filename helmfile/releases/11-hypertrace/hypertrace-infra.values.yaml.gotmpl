@@ -68,6 +68,8 @@ kafka:
     transactionStateLogReplicationFactor: 1
 
 schema-registry:
+  image:
+    repository: "tomassatka/hypertrace-schema-registry"
   replicaCount: 1
   heapOptions: "-Xms128M -Xmx128M -XX:MaxDirectMemorySize=64M -XX:+ExitOnOutOfMemoryError"
   resources:
