@@ -80,15 +80,17 @@ schema-registry:
   customEnv:
     SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR: 1
   livenessProbe:
-    initialDelaySeconds: 5
+    initialDelaySeconds: 20
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 9
   readinessProbe:
-    initialDelaySeconds: 5
+    initialDelaySeconds: 20
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 9
+  kafka:
+    bootstrapServers: "bootstrap"
 
 pinot:
   controller:
