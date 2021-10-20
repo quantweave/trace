@@ -18,8 +18,6 @@ releases:
       domain: hypertrace
     values:
       - hypertrace-infra.values.yaml.gotmpl
-    transformers:
-      - kafka.transformer.yaml
 
   - name: hypertrace
     namespace: sixsense-dev
