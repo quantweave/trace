@@ -6,16 +6,13 @@ target:
   kind: StatefulSet
   name: kafka
 patch: |-
-  apiVersion: apps/v1
-  kind: StatefulSet
-  spec:
-    template:
-      spec:
-        containers:
-        - name: kafka
-          volumeMounts:
-          - mountPath: /opt/kafka/logs
-            name: kafka-logs
-        volumes:
-        - name: kafka-logs
-          emptyDir: {}
+  - op: add
+    path: /spec/template/spec/containers/0/volumeMounts
+    value:
+      - mountPath: /opt/kafka/logs
+        name: kafka-logs
+  - op: add
+    path: /spec/template/spec/volumes
+    value:
+      - name: kafka-logs
+        emptyDir: {}
