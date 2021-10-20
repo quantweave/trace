@@ -182,6 +182,9 @@ hypertrace-graphql-service:
     periodSeconds: 10
 
 hypertrace-ui:
+  image:
+    repository: tomassatka/hypertrace-ui
+    tagOverride: "0.70.3"
   service:
     port: 2020
   resources:
