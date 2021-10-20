@@ -40,6 +40,8 @@ raw-spans-grouper:
         internal: 10
   kafka-topic-creator:
     enabled: false
+  volumeClaimTemplates:
+    storageClassName: ""
 
 hypertrace-trace-enricher:
   javaOpts: "-Xms128M -Xmx192M -XX:MaxDirectMemorySize=96M -XX:+ExitOnOutOfMemoryError"
