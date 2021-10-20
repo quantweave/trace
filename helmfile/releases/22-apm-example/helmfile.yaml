@@ -1,0 +1,26 @@
+---
+bases:
+  - "../../bases/helmDefaults.yaml"
+  - "../../bases/environments.yaml"
+
+---
+releases:
+  - name: apm-example-payment
+    namespace: sixsense-dev
+    chart: ../../../packages/apm-example-payment/.helm
+    version: 0.0.1
+    labels:
+      tier: app
+      domain: apm-example
+    values:
+      - apm-example-payment.values.yaml.gotmpl
+
+  - name: apm-example-offer
+    namespace: sixsense-dev
+    chart: ../../../packages/apm-example-offer/.helm
+    version: 0.0.1
+    labels:
+      tier: app
+      domain: apm-example
+    values:
+      - apm-example-offer.values.yaml.gotmpl

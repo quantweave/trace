@@ -1,0 +1,7 @@
+server:
+  port: 7001
+
+offer:
+  endpoint: http://localhost:7000
+
+logging.level.com.trasier.client.spring.noop: TRACE

@@ -1,0 +1,44 @@
+---
+bases:
+  - "../../bases/helmDefaults.yaml"
+  - "../../bases/environments.yaml"
+
+---
+repositories:
+  - name: elastic
+    url: https://helm.elastic.co
+
+releases:
+  - name: elasticsearch
+    namespace: sixsense-dev
+    chart: bitnami/elasticsearch
+    version: 17.1.1
+    labels:
+      tier: infra
+      domain: apm
+    values:
+      - elasticsearch.values.yaml.gotmpl
+
+  - name: kibana
+    namespace: sixsense-dev
+    chart: bitnami/kibana
+    version: 9.0.6
+    labels:
+      tier: infra
+      domain: apm
+    needs:
+      - sixsense-dev/elasticsearch
+    values:
+      - kibana.values.yaml.gotmpl
+
+  - name: apm-server
+    namespace: sixsense-dev
+    chart: elastic/apm-server
+    version: 7.15.0
+    labels:
+      tier: app
+      domain: apm
+    needs:
+      - sixsense-dev/elasticsearch
+    values:
+      - apm.values.yaml.gotmpl

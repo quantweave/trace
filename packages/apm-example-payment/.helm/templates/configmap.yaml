@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}
+data:
+  application.yaml: |
+    server:
+      port: 7001
+    offer:
+      endpoint: {{ .Values.offer.endpoint }}

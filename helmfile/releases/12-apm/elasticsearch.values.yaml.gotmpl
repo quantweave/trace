@@ -1,0 +1,25 @@
+sysctlImage:
+  enabled: false
+master:
+  heapSize: 512m
+  securityContext:
+    enabled: false
+  #TODO: deactivate
+  livenessProbe:
+    enabled: false
+coordinating:
+  securityContext:
+    enabled: false
+  #TODO: deactivate
+  livenessProbe:
+    enabled: false
+data:
+  securityContext:
+    enabled: false
+  #TODO: deactivate
+  livenessProbe:
+    enabled: false
+ingest:
+  enabled: true
+  securityContext:
+    enabled: false

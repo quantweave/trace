@@ -1,0 +1,16 @@
+image:
+  repository: tomassatka/apm-example-offer
+  pullPolicy: Always
+  tag: 0.0.1
+
+replicaCount: 1
+resources: {}
+
+service:
+  name: apm-example-offer
+  type: ClusterIP
+  externalPort: 7000
+  internalPort: 7000
+
+ingress:
+  enabled: false

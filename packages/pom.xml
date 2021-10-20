@@ -17,6 +17,8 @@
         <module>trasier-example-offer</module>
         <module>hypertrace-example-payment</module>
         <module>hypertrace-example-offer</module>
+        <module>apm-example-offer</module>
+        <module>apm-example-payment</module>
     </modules>
 
     <properties>
