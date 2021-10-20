@@ -9,7 +9,7 @@ postgresql:
   enabled: true
   fullnameOverride: "postgres"
   persistence:
-    storageClass: "standard"
+    storageClass:
     size: "2Gi"
 
 zookeeper:
@@ -23,7 +23,7 @@ zookeeper:
       cpu: "0.5"
       memory: "256Mi"
   volume:
-    storageClassName: "standard"
+    storageClassName:
     storage: "1Gi"
   livenessProbe:
     initialDelaySeconds: 5
@@ -47,7 +47,7 @@ kafka:
       cpu: "0.5"
       memory: "512Mi"
   volume:
-    storageClassName: "standard"
+    storageClassName:
     storage: "4Gi"
   readinessProbe:
     initialDelaySeconds: 5
@@ -93,7 +93,7 @@ pinot:
         memory: "256Mi"
     persistence:
       size: "4Gi"
-      storageClass: "standard"
+      storageClass:
     livenessProbe:
       initialDelaySeconds: 5
       periodSeconds: 5
@@ -132,7 +132,7 @@ pinot:
         memory: "256Mi"
     persistence:
       size: "4Gi"
-      storageClass: "standard"
+      storageClass:
     livenessProbe:
       initialDelaySeconds: 5
       periodSeconds: 5
