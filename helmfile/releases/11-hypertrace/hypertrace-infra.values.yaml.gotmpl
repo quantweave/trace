@@ -10,6 +10,10 @@ postgresql:
   fullnameOverride: "postgres"
   persistence:
     size: "2Gi"
+  securityContext:
+    enabled: false
+  containerSecurityContext:
+    enabled: false
 
 zookeeper:
   replicaCount: 1
