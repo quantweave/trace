@@ -4,25 +4,19 @@ metadata:
   name: {{ template "name" . }}
 data:
   application.yaml: |
-    spring:
-      autoconfigure:
-        exclude:org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
     server:
       port: 7001
+
+    logging.level.com.trasier.client.spring.noop: TRACE
+
     offer:
       endpoint: {{ .Values.offer.endpoint }}
-    opentracing.spring.web:
-      enabled: ${TRASIER_ACTIVATED:true}
-      client.enabled: ${TRASIER_ACTIVATED:true}
+
     trasier:
-      client:
-        accountId: ${ACCOUNT_ID:1}
-        systemName: ${APP_NAME:test}
-        activated: ${TRASIER_ACTIVATED:true}
-        payloadTracingDisabled: ${TRASIER_PAYLOAD_TRACING_DISABLED:false}
-        spaceKey: ${SPACE_KEY:test}
-        clientId: ${CLIENT_ID:1}
-        clientSecret: ${CLIENT_SECRET:secret}
       endpoint:
-        httpEndpoint: "http://trasier:8080/api/accounts/{accountId}/spaces/{spaceKey}/spans"
-        authEndpoint: "http://keycloak/auth/realms/master/protocol/openid-connect/token"
+        httpEndpoint: http://{{ .Values.trasier.endpoint }}/api/accounts/{{ .Values.trasier.accountId }}/spaces/{{ .Values.trasier.spaceKey }}/spans
+      client:
+        accountId: {{ .Values.trasier.accountId }}
+        spaceKey: {{ .Values.trasier.spaceKey }}
+        systemName: {{ .Values.trasier.systemName }}
+        useAuth: false

@@ -7,6 +7,13 @@ data:
     micronaut:
       application:
         name: trasier-server
+      server:
+        port: 8000
+        cors:
+          enabled: true
+          configurations:
+            allowedOrigins:
+              - '*'
 
     trasier.elastic:
       namespace: {{ .Release.Namespace }}
@@ -16,4 +23,5 @@ data:
       scheme: http
       index: default
       type: event
+      cluster-name: default
 

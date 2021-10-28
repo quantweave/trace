@@ -38,15 +38,15 @@ spec:
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-#          volumeMounts:
-#          - name: config
-#            mountPath: /application.yaml
-#            subPath: application.yaml
-#      volumes:
-#      - name: config
-#        configMap:
-#          name: {{ template "fullname" . }}
-#          items:
-#            - key: application.yaml
-#              path: application.yaml
+          volumeMounts:
+          - name: config
+            mountPath: /application.yaml
+            subPath: application.yaml
+      volumes:
+      - name: config
+        configMap:
+          name: {{ template "fullname" . }}
+          items:
+            - key: application.yaml
+              path: application.yaml
 

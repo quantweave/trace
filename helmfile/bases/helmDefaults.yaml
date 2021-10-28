@@ -10,3 +10,4 @@ helmDefaults:
   timeout: 5400
   # Do not recreate pods during upgrade when not required
   recreatePods: false
+  createNamespace: false

@@ -17,7 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <lombok.version>1.18.2</lombok.version>
-        <trasier-client.version>2.3.6</trasier-client.version>
+        <trasier-client.version>2.3.9</trasier-client.version>
         <springboot-version>2.5.5</springboot-version>
     </properties>
 

@@ -19,3 +19,9 @@ ingress:
 
 offer:
   endpoint: http://localhost:7000
+
+trasier:
+  endpoint: localhost:8000
+  accountId: 123456
+  spaceKey: default
+  systemName: example-payment

@@ -5,8 +5,8 @@ image:
 
 replicaCount: 1
 resources: {}
-#env:
-#  JAVA_OPTS: -Dmicronaut.config.files=/application.yaml
+env:
+  JAVA_OPTS: "-Dspring.config.location=/application.yaml"
 
 service:
   name: trasier-example-offer
@@ -16,3 +16,9 @@ service:
 
 ingress:
   enabled: false
+
+trasier:
+  endpoint: localhost:8000
+  accountId: 123456
+  spaceKey: default
+  systemName: example-offer

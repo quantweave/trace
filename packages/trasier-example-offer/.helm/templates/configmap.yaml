@@ -1,19 +1,19 @@
-#apiVersion: v1
-#kind: ConfigMap
-#metadata:
-#  name: {{ template "fullname" . }}
-#data:
-#  application.yaml: |
-#    micronaut:
-#      application:
-#        name: trasier-server
-#
-#    trasier.elastic:
-#      namespace: {{ .Release.Namespace }}
-#      hosts:
-#        - {{ .Release.Name }}-elasticsearch-master
-#      port: 9200
-#      scheme: http
-#      index: default
-#      type: event
-#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "fullname" . }}
+data:
+  application.yaml: |
+    server:
+      port: 7000
+
+    logging.level.com.trasier.client.spring.noop: TRACE
+
+    trasier:
+      endpoint:
+        httpEndpoint: http://{{ .Values.trasier.endpoint }}/api/accounts/{{ .Values.trasier.accountId }}/spaces/{{ .Values.trasier.spaceKey }}/spans
+      client:
+        accountId: {{ .Values.trasier.accountId }}
+        spaceKey: {{ .Values.trasier.spaceKey }}
+        systemName: {{ .Values.trasier.systemName }}
+        useAuth: false
