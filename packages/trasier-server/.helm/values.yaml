@@ -1,7 +1,7 @@
 image:
-  repository: tomassatka/trasier-server
+  repository: docker.io/trasier/trasier-server
   pullPolicy: IfNotPresent
-  tag: 0.0.3
+  tag: latest
 
 replicaCount: 1
 resources: {}

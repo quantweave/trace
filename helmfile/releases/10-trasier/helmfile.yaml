@@ -28,3 +28,15 @@ releases:
       domain: trasier
     values:
       - trasier.values.yaml.gotmpl
+
+  - name: trasier-ui
+    namespace: sixsense-dev
+    chart: ../../../charts/trasier-ui
+    version: 0.0.1
+    labels:
+      tier: app
+      domain: trasier
+    needs:
+      - sixsense-dev/trasier-server
+    values:
+      - trasier-ui.values.yaml.gotmpl

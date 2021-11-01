@@ -1,0 +1,19 @@
+image:
+  repository: docker.io/trasier/trasier-ui
+  pullPolicy: IfNotPresent
+  tag: unauth
+
+replicaCount: 1
+resources: {}
+
+service:
+  name: trasier-ui
+  type: ClusterIP
+  externalPort: 4200
+  internalPort: 4200
+
+ingress:
+  enabled: false
+
+backend:
+  endpoint: localhost:8000

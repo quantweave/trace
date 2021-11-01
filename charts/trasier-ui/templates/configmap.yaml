@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "name" . }}
+data:
+  config.json: |
+    {
+      "env": "dev",
+      "production": false,
+      "mock": false,
+      "readerHttpsUrl": "http://{{ .Values.backend.endpoint }}",
+      "webBackendHttpsUrl": "http://{{ .Values.backend.endpoint }}/"
+    }
