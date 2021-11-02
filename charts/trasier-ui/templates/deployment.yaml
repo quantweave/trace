@@ -54,7 +54,7 @@ spec:
           - name: uwsgi-temp
             mountPath: /var/cache/nginx/uwsgi_temp
           - name: scgi-temp
-            mountPath: /var/cache/nginx/scgi-temp
+            mountPath: /var/cache/nginx/scgi_temp
       volumes:
       - name: config
         configMap:
