@@ -49,6 +49,8 @@ spec:
             mountPath: /var/cache/nginx/client_temp
           - name: proxy-temp
             mountPath: /var/cache/nginx/proxy_temp
+          - name: fastcgi-temp
+            mountPath: /var/cache/nginx/fastcgi_temp
       volumes:
       - name: config
         configMap:
@@ -65,5 +67,7 @@ spec:
       - name: client-temp
         emptyDir: {}
       - name: proxy-temp
+        emptyDir: {}
+      - name: fastcgi-temp
         emptyDir: {}
 
