@@ -45,9 +45,9 @@ spec:
           - name: nginx-config
             mountPath: /etc/nginx/nginx.conf
             subPath: nginx.conf
-          - name: client_temp
+          - name: client-temp
             mountPath: /var/cache/nginx/client_temp
-          - name: proxy_temp
+          - name: proxy-temp
             mountPath: /var/cache/nginx/proxy_temp
       volumes:
       - name: config
@@ -62,8 +62,8 @@ spec:
           items:
             - key: nginx.conf
               path: nginx.conf
-      - name: client_temp
+      - name: client-temp
         emptyDir: {}
-      - name: proxy_temp
+      - name: proxy-temp
         emptyDir: {}
 
