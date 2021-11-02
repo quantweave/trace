@@ -8,8 +8,8 @@ data:
       "env": "dev",
       "production": false,
       "mock": false,
-      "readerHttpsUrl": "http://{{ .Values.backend.endpoint }}",
-      "webBackendHttpsUrl": "http://{{ .Values.backend.endpoint }}/"
+      "readerHttpsUrl": "http://trasier-ui-sixsense-dev.192.168.1.35.nip.io",
+      "webBackendHttpsUrl": "http://trasier-ui-sixsense-dev.192.168.1.35.nip.io/"
     }
 
   nginx.conf: |
