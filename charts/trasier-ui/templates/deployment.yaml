@@ -51,6 +51,8 @@ spec:
             mountPath: /var/cache/nginx/proxy_temp
           - name: fastcgi-temp
             mountPath: /var/cache/nginx/fastcgi_temp
+          - name: uwsgi-temp
+            mountPath: /var/cache/nginx/uwsgi_temp
       volumes:
       - name: config
         configMap:
@@ -69,5 +71,7 @@ spec:
       - name: proxy-temp
         emptyDir: {}
       - name: fastcgi-temp
+        emptyDir: {}
+      - name: uwsgi-temp
         emptyDir: {}
 
